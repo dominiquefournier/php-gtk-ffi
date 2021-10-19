@@ -29,10 +29,15 @@ class Gtk extends PhpGtk3
 		$instance = self::getInstance();
 
 		$argc = FFI::new('int');
-		$argv = FFI::new('char[0]');
-		$pargv = FFI::addr($argv);
+		$addrArgv = null;
+		if (! empty($argv)) {
+			$argv = FFI::new("char[".count($argv)."]");
+			$pargv = FFI::addr($argv);
+			$addrArgv = \FFI::addr($pargv);
+		}
 
-		$instance->ffi->gtk_init(\FFI::addr($argc), \FFI::addr($pargv));
+		$instance->ffi->gtk_init(\FFI::addr($argc), $addrArgv);
+
 	}
 
 	/**
